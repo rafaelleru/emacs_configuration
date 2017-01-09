@@ -1,0 +1,611 @@
+#+TITLE: Configuracion de emacs.
+
+Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emacs.d/configuration.org][@hrs]],  [[https://github.com/zamansky/using-emacs/blob/master/myinit.org][Zamansky]].
+* Informacion personal
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Rafael Leyva Ruiz"
+        user-mail-address "rafaelleru95103@gmail.com"
+        calendar-latitude 42.2
+        calendar-longitude -71.1
+        calendar-location-name "Madrid, ES")
+#+END_SRC
+
+#+RESULTS:
+: Madrid, ES
+
+* Gestion de paquetes =melpa y cask=
+   #+BEGIN_SRC emacs-lisp
+     (require 'cask "~/.cask/cask.el")
+     (cask-initialize)
+     (require 'pallet)
+   #+END_SRC
+
+* Ajustes de la interfaz
+** Ocultar botones que no uso y la barra de scroll.
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+** tema personalizado
+Buscar mejor solarized dark
+   #+BEGIN_SRC emacs-lisp
+     (defun load-my-theme ()
+         ;;;"""Carga mi tema solarized"""
+         (interactive)
+         (setq solarized-use-variable-pitch nil)
+         (setq solarized-height-plus-1 1.0)
+         (setq solarized-height-plus-2 1.0)
+         (setq solarized-height-plus-3 1.0)
+         (setq solarized-height-plus-4 1.0)
+         (setq solarized-high-contrast-mode-line t)
+         (load-theme 'solarized-dark t)
+     )
+     (add-hook 'after-init-hook 'load-my-theme)
+   #+END_SRC
+   #+BEGIN_SRC 
+     ;(require 'color-theme)
+     ;(require 'color-theme-solarized-dark)
+     (require 'color-theme)
+     (require  'color-theme-solarized)
+     (defun my/setup-color-theme ()
+       (interactive)
+       ;(color-theme-solarized-dark))
+       (load-theme 'solarized-dark t))
+     ;(eval-after-load 'color-theme (my/setup-color-theme))
+   #+END_SRC
+** Fuente Inconsoladata
+Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
+#+BEGIN_SRC emacs-lisp
+    (setq hrs/default-font "Inconsolata")
+    (setq hrs/default-font-size 13)
+    (setq hrs/current-font-size hrs/default-font-size)
+
+
+  (defun set-font () 
+    (interactive)
+    (setq hrs/default-font "Inconsolata")
+    (setq hrs/default-font-size 13)
+    (setq hrs/current-font-size hrs/default-font-size))
+
+  (add-hook 'after-make-frame-functions
+	    (lambda (frame)
+	      (select-frame frame)
+	      (set-font)))
+
+
+  (setq hrs/font-change-increment 1.1)
+
+  (defun hrs/set-font-size ()
+    "Set the font to `hrs/default-font' at `hrs/current-font-size'."
+    (set-frame-font
+     (concat hrs/default-font "-" (number-to-string hrs/current-font-size))))
+
+  (defun hrs/reset-font-size ()
+    "Change font size back to `hrs/default-font-size'."
+    (interactive)
+    (setq hrs/current-font-size hrs/default-font-size)
+    (hrs/set-font-size))
+
+  (defun hrs/increase-font-size ()
+    "Increase current font size by a factor of `hrs/font-change-increment'."
+    (interactive)
+    (setq hrs/current-font-size
+          (ceiling (* hrs/current-font-size hrs/font-change-increment)))
+    (hrs/set-font-size))
+
+  (defun hrs/decrease-font-size ()
+    "Decrease current font size by a factor of `hrs/font-change-increment', down to a minimum size of 1."
+    (interactive)
+    (setq hrs/current-font-size
+          (max 1
+	       (floor (/ hrs/current-font-size hrs/font-change-increment))))
+    (hrs/set-font-size))
+
+  (define-key global-map (kbd "C-)") 'hrs/reset-font-size)
+  (define-key global-map (kbd "C-+") 'hrs/increase-font-size)
+  (define-key global-map (kbd "C-=") 'hrs/increase-font-size)
+  (define-key global-map (kbd "C-_") 'hrs/decrease-font-size)
+  (define-key global-map (kbd "C--") 'hrs/decrease-font-size)
+
+  (hrs/reset-font-size)
+#+END_SRC
+
+** Resaltar linea de edicion
+#+BEGIN_SRC emacs-lisp
+  (when window-system
+    (global-hl-line-mode))
+#+END_SRC
+** Ver coincidencia de parentesis
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+#+END_SRC
+** Tamaño al abrir una nueva ventana de emacs
+#+BEGIN_SRC emacs-lisp
+  (when window-system (set-frame-size (selected-frame) 100 60))
+#+END_SRC
+** No mover el cursor al hacer scroll con el raton
+#+BEGIN_SRC emacs-lisp
+  (defun scroll-down-keep-cursor ()
+    (interactive)
+    (scroll-down 1))
+  (defun scroll-up-keep-cursor ()
+    (interactive)
+    (scroll-up 1))
+#+END_SRC
+** Activar ido mode (cambiado por ivy-mode y swiper)
+   #+BEGIN_SRC emacs-lisp
+      ;(ido-mode t)
+   #+END_SRC
+** Ivi mode y swiper
+*** Mirar helm (parece mas potente)
+    https://github.com/emacs-helm/helm
+    https://github.com/abo-abo/swiper-helm
+   #+BEGIN_SRC emacs-lisp
+     (ivy-mode 1)
+     (require 'swiper)
+     (require 'counsel)
+     (setq ivy-use-virtual-buffers t)
+     (global-set-key "\C-s" 'swiper)
+     (global-set-key "\C-r" 'swiper)
+     (global-set-key (kbd "C-c C-r") 'ivy-resume)
+     (global-set-key (kbd "M-x") 'counsel-M-x)
+     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+     (setq ivy-use-virtual-buffers t)
+     (setq ivy-display-style 'fancy)
+     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+   #+END_SRC
+** Winner mode
+   - Permite almacenar el estado anterior de las ventanas y volver con =C-c flecha=
+   #+BEGIN_SRC emacs-lisp
+     (winner-mode t)
+   #+END_SRC
+
+** Ace window
+   Visto en https://www.youtube.com/watch?v=D6OUMVbPKSA&index=5&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg
+   parece muy util.
+
+   #+BEGIN_SRC emacs-lisp
+     (ace-window t)
+     (global-set-key [remap other-window] 'ace-window)
+     ;(setq aw-scope 'frame)
+     (custom-set-faces
+     '(aw-leading-char-face
+     ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+   #+END_SRC
+** Auto revert mode
+   #+BEGIN_SRC emacs-lisp
+     (global-auto-revert-mode 1)
+   #+END_SRC
+** cambar preguntas de yes or no por y or n
+   http://pages.sachachua.com/.emacs.d/Sacha.html#org0477c97
+   #+BEGIN_SRC emacs-lisp
+     (fset 'yes-or-no-p 'y-or-n-p)
+   #+END_SRC
+* Utilidades
+** seleccionar con =C-==
+   como en https://www.youtube.com/watch?v=vKIFi1h0I5Y&index=17&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg&spfreload=5
+   #+BEGIN_SRC emacs-lisp
+     (require 'expand-region)
+     (global-set-key (kbd "C-=") 'er/expand-region)
+   #+END_SRC
+** suena interesante (historial de portapapeles con ivy y counsel)
+   https://www.youtube.com/watch?v=LReZI7VAy8w&index=20&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg
+** atajo para ir directamente a una linea =goto-line=
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c C-g C-l") 'goto-line)
+   #+END_SRC
+* Ajustes para lenguajes de programacion
+** Autocomplete mode.
+   #+BEGIN_SRC emacs-lisp
+     (ac-config-default)
+     (global-auto-complete-mode t)
+     ;(global-set-key (kbd "C--") auto-complete-
+   #+END_SRC
+** Yasnippet.
+   #+BEGIN_SRC emacs-lisp
+     (require 'yasnippet)
+     (yas-global-mode 1)
+   #+END_SRC
+
+   No se como pero se pude hacer que los snippets aparezcan en el
+   autocompletado. tambien es verdad que el autocomplete no me
+   funciona bien.
+** Activar company mode de modo global y flycheck para colorear la sintaxis
+#+BEGIN_SRC emacs-lisp
+  ;  (add-hook 'after-init-hook 'global-company-mode)
+  ;  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (require 'flycheck)
+  (global-flycheck-mode t)
+#+END_SRC
+** Activamos =global-hl-line-mode= para ver los todos en el codigo
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-init-hook #'global-hl-todo-mode)
+#+END_SRC
+** Multiples cursores, muy practico para editar html.
+** Python
+*** autocomplete con company Jedi
+**** TODO Instalar el servidor
+#+BEGIN_SRC emacs-lisp
+  (defun my/python-mode-hook ()
+    (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'python-mode-hook 'my/python-mode-hook)
+#+END_SRC
+** C ++
+#+BEGIN_SRC emacs-lisp
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async)
+    (require auto-complete-clang))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony))
+
+  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+#+END_SRC
+** javascript
+** html
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'html-mode-hook
+            (lambda () 
+              (rainbow-mode t)))
+#+END_SRC
+** css
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'css-mode-hook
+            (lambda ()
+              (rainbow-mode t)))
+#+END_SRC
+** Latex
+No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene (como html xD)
+*** autoparsear el buffer al cargarlo
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-parse-self t)
+#+END_SRC
+*** Compilar siempre con pdflatex
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-PDF-mode t)
+#+END_SRC
+
+*** Minor mode para matematicas, añade ademas ciertos atajos de teclado
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'LaTeX-mode-hook
+            (lambda ()
+              (LaTeX-math-mode)
+              (setq TeX-master t)))
+#+END_SRC
+
+** R
+** Java
+*** JDEE
+    #+BEGIN_SRC emacs-lisp
+      (require 'jdee)
+      (setq jdee-server-dir "~/.jars")
+    #+END_SRC
+* Magit
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-g") 'magit-status)
+   #+END_SRC 
+* Orgmode
+** Autocompletado para org
+   #+BEGIN_SRC emacs-lisp
+     (require 'org-ac)
+     (org-ac/config-default)
+   #+END_SRC
+** Autorevertmode en buffers de rogmode
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'org-mode-hook 'auto-revert-mode 1)
+   #+END_SRC
+
+   #+RESULTS:
+   | (lambda nil (org-bullets-mode t)) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-ac/setup-current-buffer | auto-revert-mode |
+
+** Activar puntos en vez de asteriscos, que mola mas.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook
+            (lambda ()
+              (org-bullets-mode t)))
+#+END_SRC
+** En vez de puntos suspensivos mostrar flecha '⤵'
+   #+BEGIN_SRC emacs-lisp
+     (setq org-ellipsis "⤵")
+   #+END_SRC
+** Bloques de codigo en archivos orgmode
+*** Activar el coloreado de sintaxis en bloques de código de orgmode
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t)
+#+END_SRC
+*** Hacer que las tabulaciones actuen como si estuvieramos en un bugger del lenguaje indicadoBEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-tab-acts-natively t)
+#+END_SRC
+
+*** No cambiar de ventana al editar un snippet de codigo
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+#+END_SRC
+** GTD y ideas en org-mode
+*** Todos los archivos org los guardo en '~/org/'
+     #+BEGIN_SRC emacs-lisp
+       (setq org-directory "~/org")
+     #+END_SRC
+*** Funcion que devuelve el path de un archivo org en "~/org"
+#+BEGIN_SRC emacs-lisp
+  (defun org-file-path (filename)
+    "Return the absolute address of an org file, given its relative name."
+    (concat (file-name-as-directory org-directory) filename))
+#+END_SRC
+*** Localizacion del archivo de todos
+#+BEGIN_SRC emacs-lisp
+  (setq org-index-file (org-file-path "index.org"))
+#+END_SRC
+*** Localizacion del archive.org, ahi se guarda todo lo que hago.
+#+BEGIN_SRC emacs-lisp
+  (setq org-archive-location
+        (concat (org-file-path "archive.org") "::* From %s"))
+#+END_SRC
+*** La agenda se carga desde el index
+   #+BEGIN_SRC emacs-lisp
+     (setq org-agenda-files (list org-index-file
+   			       "~/org/gcal.org"))
+   #+END_SRC
+
+   #+RESULTS:
+   | ~/org/index.org | ~/org/gcal.org |
+
+*** La combinacion =C-c C-x C-s= establece un TODO como DONE y lo almacena en el index
+    #+BEGIN_SRC emacs-lisp
+      (defun mark-done-and-archive ()
+        (interactive)
+        (org-todo 'done)
+        (org-archive-subtree))
+      (define-key org-mode-map "\C-c\C-x\C-s" 'mark-done-and-archive) 
+
+      (defun mark-done-and-archive-agenda ()
+        (interactive)
+        (org-agenda-todo 'done)
+        (org-agenda-archive))
+      (require 'org-agenda)
+      (define-key org-agenda-mode-map "\C-c\C-x\C-s" 'mark-done-and-archive-agenda)
+    #+END_SRC
+*** en el log de orgmode cuando se ha completado una tarea
+    #+BEGIN_SRC emacs-lisp
+      (setq org-log-done 'time)
+    #+END_SRC
+*** Org-capture templates.
+    Hay templates para varias cosas:
+    - Ideas que se me van ocurriendo para proyectos que hacer.
+    - Cosas que tengo que comprar.
+    - Articulos o libros que tengo que leer.
+    - TODOs que tengo me van surgiendo.
+**** TODO completar descripcion de los templates.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-capture-templates
+      '(("i" "Idea"
+         entry
+         (file (org-file-path "idea.org")
+                 "* IDEA %?\n"))
+
+        ("r" "To read item"
+         checkitem
+         (file+datetree (org-file-path "to-read.org"))
+         " [ ] %? ")
+
+        ("b" "Item to buy"
+         entry
+         (file+datetree "buylist.org")
+         "* BUY %?")
+
+         ("t" "Todo"
+              entry
+              (file+headline org-index-file "TASKS")
+              "* TODO %?\n  ADDED:%T")
+
+         ("u" "UGR Todo"
+              entry
+              (file+headline org-index-file "UGR")
+              "* TODO %? %^g:UGR:\nADDED:%T")
+
+         ("e" "Nuevo evento"
+              entry
+              (file "~/org/gcal.org")
+          "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+         ))
+     #+END_SRC
+
+	  #+RESULTS:
+	  | i | Idea | entry | (file (org-file-path idea.org) * IDEA %? |
+
+**** Keybindings
+Accesos rapidos de teclado para tareas y notas en org mode
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map "\C-cl" 'org-store-link)
+  (define-key global-map "\C-ca" 'org-agenda)
+  (define-key global-map "\C-cc" 'org-capture)
+#+END_SRC
+
+Presionar =C-c i= para abrir *index.org*
+
+#+BEGIN_SRC emacs-lisp
+  (defun open-index-file ()
+    "Open the master org TODO list."
+    (interactive)
+    (find-file org-index-file)
+    (flycheck-mode -1)
+    (end-of-buffer))
+
+  (global-set-key (kbd "C-c i") 'open-index-file)
+#+END_SRC
+
+**** Hit =M-n= to quickly open up a capture template for a new todo.
+#+BEGIN_SRC emacs-lisp
+  (defun org-capture-todo ()
+    (interactive)
+    (org-capture :keys "t"))
+
+  (global-set-key (kbd "M-n") 'org-capture-todo)
+#+END_SRC
+
+*** Frame para capturas.
+    De [[https://github.com/zamansky/using-emacs/blob/master/myinit.org][Zamansky]]
+    #+BEGIN_SRC emacs-lisp
+      (defadvice org-capture-finalize 
+          (after delete-capture-frame activate)  
+        "Advise capture-finalize to close the frame"  
+        (if (equal "capture" (frame-parameter nil 'name))  
+    	(delete-frame)))
+
+      (defadvice org-capture-destroy 
+          (after delete-capture-frame activate)  
+        "Advise capture-destroy to close the frame"  
+        (if (equal "capture" (frame-parameter nil 'name))  
+    	(delete-frame)))  
+
+      (require 'noflet)
+
+      (defun make-capture-frame ()
+        "Create a new frame and run org-capture."
+        (interactive)
+        (make-frame '((name . "capture")))
+        (select-frame-by-name "capture")
+        (delete-other-windows)
+        (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+    	    (org-capture)))
+    #+END_SRC
+**** TODO No funciona si no hay una ventana abierta con =emacsclient -e "(make-capture-frame)"=
+*** gcal-org
+    #+BEGIN_SRC emacs-lisp
+      (require 'org-gcal)
+      (load-file "hidden.el")
+    #+END_SRC
+**** hooks para la agenda:
+     #+BEGIN_SRC emacs-lisp
+       (add-hook 'after-init-hook (lambda () (org-gcal-sync) ))
+       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+     #+END_SRC
+
+     #+RESULTS:
+     | lambda | nil | (org-gcal-sync) |
+
+** Exportando desde orgmode
+*** Exportar a markdown y beamer directamente
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-md)
+  (require 'ox-beamer)
+  (require 'ox-reveal)
+#+END_SRC
+
+*** Permitir que babel evalue codigo de GNUPLOT, emacs-lisp, ruby, y python.
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (ruby . t)
+     (python . t)
+     (dot . t)
+     (gnuplot . t)))
+#+END_SRC
+*** Desactivar la confirmacion para evaluar codigo
+#+BEGIN_SRC emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
+#+END_SRC
+*** Exportar a PDF
+Activar el coloreado de codigo con pylint
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+END_SRC
+
+Ademas incluimos este paquete en todos los documetos de latex que exportemos
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted)
+#+END_SRC
+** Org-sync para gestionar los issues de github en orgmode
+   #+BEGIN_SRC emacs-lisp
+     (require 'org-sync)
+     (require 'org-sync-github) ;backend para github si queremos mas solo añadir
+   #+END_SRC
+
+*** funcion que detecta si hay un repositorio de git en el directorio actual y carga automaticamente los issues en <nombre_repo>.org
+**** TODO la funcion y aprender lisp xD
+* small-shell from [[https://github.com/vterron/dot-emacs][@pyctor]]
+#+BEGIN_SRC emacs-lisp
+  (defun small-shell ()
+    (interactive)
+    (split-window-vertically)
+    (other-window 1)
+    (shrink-window (- (window-height) 12))
+    (ansi-term "/bin/bash"))
+#+END_SRC
+** TODO no se por que pero =zsh= da problemas
+* Undo Tree 
+  #+BEGIN_SRC emacs-lisp
+    (require 'undo-tree)
+    (global-undo-tree-mode 1)
+  #+END_SRC
+  Activar las flechas para navegar por undo Tree mode (parece que no me hace falta hacer esto)
+  #+BEGIN_SRC emacs-lisp
+    ;(add-hook 'undo-tree-mode-hook
+    ; 	  (lambda ()
+    ;	    (enable-arrow-keys)))
+  #+END_SRC
+* Desactivo las flechas para no usarlas, que para algo tiene emacs tantos atajos
+  #+BEGIN_SRC emacs-lisp
+    (defun disable-arrow-keys ()
+    (interactive)
+        ;;;Desactiva la nevagacion con las flechas
+    (global-unset-key (kbd "<left>"))
+    (global-unset-key (kbd "<right>"))
+    (global-unset-key (kbd "<up>"))
+    (global-unset-key (kbd "<down>")))
+
+
+    (defun enable-arrow-keys ()
+    (interactive)
+        ;;;Activa la navegacion con flecha
+     (global-set-key (kbd "<left>") 'left-char)
+     (global-set-key (kbd "<right>")  'right-char)
+     (global-set-key (kbd "<up>") 'previous-line)
+     (global-set-key (kbd "<down>") 'next-line))
+
+    ;(disable-arrow-keys) He conseguido no usar las flechas al fin.
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'term-mode-hook
+  	    (lambda ()
+  	      (local-set-key (kbd "C-c C-k") 'kill-buffer-this-buffer)))
+  #+END_SRC
+* Abrir cheatseet de emacs.
+  #+BEGIN_SRC emacs-lisp
+    (defun open-cheat-sheet ()
+      "Abre en un buffer aparte el cheat-sheet de emacs realizado por mi en orgmode"
+      (interactive)
+      (split-window-horizontally)
+      (other-window 1)
+      (shrink-window (- (window-width) 30)) ;No va la anchura pero weno
+      (find-file "~/.emacs.d/cheat-sheet.org"))
+  #+END_SRC
+
+  #+RESULTS:
+  : open-cheat-sheet
+
+* Arrancar emacs como servidor si no esta arrancado.
+  #+BEGIN_SRC emacs-lisp
+   ; (server-mode 1)
+  #+END_SRC
+
+** Para cargar el tema personalizado en cada frame que creemos
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'after-make-frame-functions
+               (lambda (frame)
+                 (select-frame frame)
+                 (load-my-theme)))
+   #+END_SRC

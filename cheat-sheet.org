@@ -1,0 +1,60 @@
+#+TITLE: Emacs cheat sheet
+#+AUTHOR: Rafael Leyva Ruiz
+
+* Interfaz
+** Aumentar tamaño de la fuente =C-== y =C-+=
+** Disminuir tamaño de la fuente =C-_= y =C--=
+
+* Archivos y buffers
+** Abrir archivo =C-x C-f=
+** Guardar cambios en un buffer =C-x C-s=
+** Cambiar de buffer =C-x b=
+** Mostrar la lista de buffers =C-x C-b=
+** kill buffer =C-x k=
+** pasar al anterior estado de ventanas =C-c <arrow>=
+* Navegando en el buffer
+** siguiente caracter =C-f=
+** anterior caracter =C-b=
+** siguiente palabra =M-f=
+** anterior palabra =M-b=
+** siguiente linea =C-n=
+** anterior linea =C-b=
+** ir al final de la linea =C-e=
+** ir al principio de la linea =C-b=
+** centrar el buffer =C-l=
+** siguiente parrafo =M-n=
+** anterior parrafo =M-p=
+** re pag =C-v=
+** av pag =M-v=
+** goto-line =C-c C-g C-l=
+* Buscar, copiar, pegar...
+  Algunos de estos atajos son para swipper
+** Buscar =C-s=
+** Buscar expresiones regulares =No se como se hace en swiper=
+** Buscar y reemplazar =No se como se hace en swiper=
+** Copiar =M-w=
+** Cortar =C-w=
+** Pegar =C-y=
+** Marca para seleccionar texto =C-<space>= (tambien para eliminar la marca)
+
+* Undo Tree
+** Activa la navegacion con flechas
+** =q= vuelve al nodo de edicion seleccionado
+** =d= muestra un diff del estado actual del archivo y el nodo seleccionado
+
+* Magit
+** Abrir el buffer de magit =M-g=
+** stash cambios =s=
+** unstash cambios =u=
+** commit =c=
+** push =P u=
+** pull =F u=
+
+* Org mode
+** Ejecutar bloque de código =C-c C-c=
+** Abrir buffer de edicion de codigo al editar un bloque de código =C-'=
+** Exportar =C-c C-e=
+   - Marcar checkbox como leido =C-c C-x C-b=
+* Multiples cursores
+** Someday
+* Salir de emacs =C-x C-c=
