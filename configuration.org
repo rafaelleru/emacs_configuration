@@ -20,6 +20,9 @@ Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emac
      (require 'pallet)
    #+END_SRC
 
+   #+RESULTS:
+   : pallet
+
 * Ajustes de la interfaz
 ** Ocultar botones que no uso y la barra de scroll.
 #+BEGIN_SRC emacs-lisp
@@ -27,6 +30,9 @@ Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emac
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
 #+END_SRC
+
+#+RESULTS:
+
 ** tema personalizado
 Buscar mejor solarized dark
    #+BEGIN_SRC emacs-lisp
@@ -42,7 +48,18 @@ Buscar mejor solarized dark
          (load-theme 'solarized-dark t)
      )
      (add-hook 'after-init-hook 'load-my-theme)
+     (when window-system
+       (lambda) (load-my-theme))
+
+     (defun load-my-white-theme ()
+       (interactive)
+       (load-theme 'solarized t)
+       )
    #+END_SRC
+
+   #+RESULTS:
+   : load-my-white-theme
+
    #+BEGIN_SRC 
      ;(require 'color-theme)
      ;(require 'color-theme-solarized-dark)
@@ -55,24 +72,17 @@ Buscar mejor solarized dark
      ;(eval-after-load 'color-theme (my/setup-color-theme))
    #+END_SRC
 ** Fuente Inconsoladata
-Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
+   Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
 #+BEGIN_SRC emacs-lisp
     (setq hrs/default-font "Inconsolata")
     (setq hrs/default-font-size 13)
     (setq hrs/current-font-size hrs/default-font-size)
-
 
   (defun set-font () 
     (interactive)
     (setq hrs/default-font "Inconsolata")
     (setq hrs/default-font-size 13)
     (setq hrs/current-font-size hrs/default-font-size))
-
-  (add-hook 'after-make-frame-functions
-	    (lambda (frame)
-	      (select-frame frame)
-	      (set-font)))
-
 
   (setq hrs/font-change-increment 1.1)
 
@@ -104,17 +114,16 @@ Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones 
 
   (define-key global-map (kbd "C-)") 'hrs/reset-font-size)
   (define-key global-map (kbd "C-+") 'hrs/increase-font-size)
-  (define-key global-map (kbd "C-=") 'hrs/increase-font-size)
   (define-key global-map (kbd "C-_") 'hrs/decrease-font-size)
   (define-key global-map (kbd "C--") 'hrs/decrease-font-size)
-
-  (hrs/reset-font-size)
 #+END_SRC
+
+#+RESULTS:
+| hrs/reset-font-size | global-hl-todo-mode | global-hl-line-mode | set-font | load-my-theme | x-wm-set-size-hint | table--make-cell-map |
 
 ** Resaltar linea de edicion
 #+BEGIN_SRC emacs-lisp
-  (when window-system
-    (global-hl-line-mode))
+  (add-hook 'after-init-hook 'global-hl-line-mode)
 #+END_SRC
 ** Ver coincidencia de parentesis
 #+BEGIN_SRC emacs-lisp
@@ -238,7 +247,7 @@ Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones 
       'irony-completion-at-point-async)
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async)
-    (require auto-complete-clang))
+    (require 'auto-complete-clang))
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
   (eval-after-load 'company
@@ -479,11 +488,15 @@ Presionar =C-c i= para abrir *index.org*
 *** gcal-org
     #+BEGIN_SRC emacs-lisp
       (require 'org-gcal)
-      (load-file "hidden.el")
+      (load-file "~/.emacs.d/hidden.el")
     #+END_SRC
+
+    #+RESULTS:
+    : t
+
 **** hooks para la agenda:
      #+BEGIN_SRC emacs-lisp
-       (add-hook 'after-init-hook (lambda () (org-gcal-sync) ))
+       ;(add-hook 'after-init-hook (lambda () (org-gcal-sync) ))
        (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
        (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
      #+END_SRC
@@ -607,5 +620,9 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
      (add-hook 'after-make-frame-functions
                (lambda (frame)
                  (select-frame frame)
-                 (load-my-theme)))
+                 (load-my-theme)
+   	      (set-font)))
    #+END_SRC
+
+   #+RESULTS:
+   | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | (lambda (frame) (select-frame frame) (load-my-theme)) | x-dnd-init-frame |

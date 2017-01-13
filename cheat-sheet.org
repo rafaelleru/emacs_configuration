@@ -55,6 +55,7 @@
 ** Abrir buffer de edicion de codigo al editar un bloque de código =C-'=
 ** Exportar =C-c C-e=
    - Marcar checkbox como leido =C-c C-x C-b=
+** checkboxtoggle =C-c C-c=
 * Multiples cursores
 ** Someday
 * Salir de emacs =C-x C-c=
