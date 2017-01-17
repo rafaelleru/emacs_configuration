@@ -36,7 +36,14 @@
 ** Cortar =C-w=
 ** Pegar =C-y=
 ** Marca para seleccionar texto =C-<space>= (tambien para eliminar la marca)
-
+* helm
+** files
+*** navegar =C-n= y =C-p=
+*** level up =C-l=
+*** persistent-accion =C-j= =C-z=
+*** Abrir archivo con otro programa =C-x C-b=
+** =C-x b= helm-mini (lista de buffers)
+** [[https://github.com/emacs-helm/helm/wiki][wiki de helm]]
 * Undo Tree
 ** Activa la navegacion con flechas
 ** =q= vuelve al nodo de edicion seleccionado
