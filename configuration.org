@@ -146,38 +146,6 @@ Buscar mejor solarized dark
    #+BEGIN_SRC emacs-lisp
       ;(ido-mode t)
    #+END_SRC
-** Ivi mode y swiper
-*** Mirar helm (parece mas potente)
-    https://github.com/emacs-helm/helm
-    https://github.com/abo-abo/swiper-helm
-   #+BEGIN_SRC emacs-lisp
-     (ivy-mode 1)
-     (require 'swiper)
-     (require 'counsel)
-     (setq ivy-use-virtual-buffers t)
-     (global-set-key "\C-s" 'swiper)
-     (global-set-key "\C-r" 'swiper)
-     (global-set-key (kbd "C-c C-r") 'ivy-resume)
-     (global-set-key (kbd "M-x") 'counsel-M-x)
-     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-     (setq ivy-use-virtual-buffers t)
-     (setq ivy-display-style 'fancy)
-     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-   #+END_SRC
-** Helm (hay que revisar)
-   #+BEGIN_SRC emacs-lisp
-     (require 'helm)
-     (require 'helm-config)
-     (helm-autoresize-mode t)
-     (helm-mode t)
-     (global-set-key (kbd "C-x C-f") 'helm-find-files) //Me gustaria que <TAB> complete y un <del> borre hasta /
-     (global-set-key (kbd "C-x b") 'helm-mini)
-     (global-set-key (kbd "M-x") 'helm-M-x)
-   #+END_SRC
-
-   #+RESULTS:
-   : helm-M-x
-
 ** Winner mode
    - Permite almacenar el estado anterior de las ventanas y volver con =C-c flecha=
    #+BEGIN_SRC emacs-lisp
@@ -214,10 +182,42 @@ Buscar mejor solarized dark
    #+END_SRC
 ** suena interesante (historial de portapapeles con ivy y counsel)
    https://www.youtube.com/watch?v=LReZI7VAy8w&index=20&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg
-** atajo para ir directamente a una linea =goto-line=
+** atajo para ir directamente a una linea =goto-line= 
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-c C-g C-l") 'goto-line)
    #+END_SRC
+** Ivi mode y swiper
+*** Mirar helm (parece mas potente)
+    https://github.com/emacs-helm/helm
+    https://github.com/abo-abo/swiper-helm
+   #+BEGIN_SRC emacs-lisp
+     (ivy-mode 1)
+     (require 'swiper)
+     (require 'counsel)
+     (setq ivy-use-virtual-buffers t)
+     (global-set-key "\C-s" 'swiper)
+     (global-set-key "\C-r" 'swiper)
+     (global-set-key (kbd "C-c C-r") 'ivy-resume)
+     (global-set-key (kbd "M-x") 'counsel-M-x)
+     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+     (setq ivy-use-virtual-buffers t)
+     (setq ivy-display-style 'fancy)
+     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+   #+END_SRC
+** Helm (hay que revisar)
+   #+BEGIN_SRC emacs-lisp
+     (require 'helm)
+     (require 'helm-config)
+     (helm-autoresize-mode t)
+     (helm-mode t)
+     (global-set-key (kbd "C-x C-f") 'helm-find-files) //Me gustaria que <TAB> complete y un <del> borre hasta /
+     (global-set-key (kbd "C-x b") 'helm-mini)
+     (global-set-key (kbd "M-x") 'helm-M-x)
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-M-x
+
 * Ajustes para lenguajes de programacion
 ** Autocomplete mode.
    #+BEGIN_SRC emacs-lisp
