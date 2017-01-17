@@ -635,10 +635,10 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
     (defun open-cheat-sheet ()
       "Abre en un buffer aparte el cheat-sheet de emacs realizado por mi en orgmode"
       (interactive)
-      (split-window-horizontally)
-      (other-window 1)
-      (shrink-window (- (window-width) 30)) ;No va la anchura pero weno
-      (find-file "~/.emacs.d/cheat-sheet.org"))
+      ;; (split-window-horizontally)
+      ;; (other-window 1)
+      ;; (shrink-window (- (window-width) 30)) ;No va la anchura pero weno
+      (find-file-other-frame "~/.emacs.d/cheat-sheet.org"))
   #+END_SRC
 
   #+RESULTS:
