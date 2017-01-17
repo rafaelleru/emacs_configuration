@@ -170,12 +170,13 @@ Buscar mejor solarized dark
      (require 'helm-config)
      (helm-autoresize-mode t)
      (helm-mode t)
-     (global-set-key (kbd "C-x C-f") 'helm-find-files)
+     (global-set-key (kbd "C-x C-f") 'helm-find-files) //Me gustaria que <TAB> complete y un <del> borre hasta /
      (global-set-key (kbd "C-x b") 'helm-mini)
+     (global-set-key (kbd "M-x") 'helm-M-x)
    #+END_SRC
 
    #+RESULTS:
-   : helm-mini
+   : helm-M-x
 
 ** Winner mode
    - Permite almacenar el estado anterior de las ventanas y volver con =C-c flecha=
