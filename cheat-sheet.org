@@ -66,3 +66,4 @@
 * Multiples cursores
 ** Someday
 * Salir de emacs =C-x C-c=
+* Cerrar un frame =C-x 5 0=
