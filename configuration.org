@@ -75,13 +75,13 @@ Buscar mejor solarized dark
    Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
 #+BEGIN_SRC emacs-lisp
     (setq hrs/default-font "Inconsolata")
-    (setq hrs/default-font-size 13)
+    (setq hrs/default-font-size 15)
     (setq hrs/current-font-size hrs/default-font-size)
 
   (defun set-font () 
     (interactive)
     (setq hrs/default-font "Inconsolata")
-    (setq hrs/default-font-size 13)
+    (setq hrs/default-font-size 15)
     (setq hrs/current-font-size hrs/default-font-size))
 
   (setq hrs/font-change-increment 1.1)
@@ -119,7 +119,7 @@ Buscar mejor solarized dark
 #+END_SRC
 
 #+RESULTS:
-| hrs/reset-font-size | global-hl-todo-mode | global-hl-line-mode | set-font | load-my-theme | x-wm-set-size-hint | table--make-cell-map |
+: hrs/decrease-font-size
 
 ** Resaltar linea de edicion
 #+BEGIN_SRC emacs-lisp
@@ -173,6 +173,14 @@ Buscar mejor solarized dark
    #+BEGIN_SRC emacs-lisp
      (fset 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
+** Desactivar la pantalla de bienvenida
+   #+BEGIN_SRC emacs-lisp
+     (setq inibit-startup-message t)
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
 * Utilidades
 ** seleccionar con =C-==
    como en https://www.youtube.com/watch?v=vKIFi1h0I5Y&index=17&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg&spfreload=5
@@ -210,13 +218,23 @@ Buscar mejor solarized dark
      (require 'helm-config)
      (helm-autoresize-mode t)
      (helm-mode t)
-     (global-set-key (kbd "C-x C-f") 'helm-find-files) //Me gustaria que <TAB> complete y un <del> borre hasta /
+     (global-set-key (kbd "C-x C-f") 'helm-find-files); <del> borre hasta /
      (global-set-key (kbd "C-x b") 'helm-mini)
      (global-set-key (kbd "M-x") 'helm-M-x)
+     (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
    #+END_SRC
 
    #+RESULTS:
-   : helm-M-x
+   : helm-execute-persistent-action
+** neotree
+   #+BEGIN_SRC emacs-lisp
+     (setq neo-theme (if (display-graphic-p) 'ascii 'arrow))
+     (global-set-key (kbd "C-x n t") 'neotree-toggle)
+   #+END_SRC
+
+   #+RESULTS:
+   : neotree-toggle
 
 * Ajustes para lenguajes de programacion
 ** Autocomplete mode.
@@ -528,7 +546,7 @@ Presionar =C-c i= para abrir *index.org*
     #+RESULTS:
     : t
 
-**** hooks para la agenda:
+**** hooks ppara la agenda:
      #+BEGIN_SRC emacs-lisp
        ;(add-hook 'after-init-hook (lambda () (org-gcal-sync) ))
        (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
@@ -649,6 +667,8 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
    ; (server-mode 1)
   #+END_SRC
 
+  #+RESULTS:
+
 ** Para cargar el tema personalizado en cada frame que creemos
    #+BEGIN_SRC emacs-lisp
      (add-hook 'after-make-frame-functions
@@ -659,4 +679,4 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
    #+END_SRC
 
    #+RESULTS:
-   | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | (lambda (frame) (select-frame frame) (load-my-theme)) | x-dnd-init-frame |
+   | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | (lambda (frame) (select-frame frame) (load-my-theme)) | x-dnd-init-frame 
