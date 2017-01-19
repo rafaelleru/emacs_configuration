@@ -49,6 +49,14 @@
 ** =q= vuelve al nodo de edicion seleccionado
 ** =d= muestra un diff del estado actual del archivo y el nodo seleccionado
 
+* neotree
+** =SPC= =RET= =TAB= expandir nivel
+** =g= refresh
+** =A= maximizar o minimizar
+** =C-c C-n= nuevo archivo
+** =C-c C-d= borrar archivo
+** =C-c C-r= renombrar archivo
+** =C-c C-c= cambiar el directorio raiz que muestra neotree
 * Magit
 ** Abrir el buffer de magit =M-g=
 ** stash cambios =s=
