@@ -607,8 +607,12 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
     (split-window-vertically)
     (other-window 1)
     (shrink-window (- (window-height) 12))
-    (ansi-term "/bin/bash"))
+    (eshell "/bin/zsh"))
 #+END_SRC
+
+#+RESULTS:
+: small-shell
+
 ** TODO no se por que pero =zsh= da problemas
 * Undo Tree 
   #+BEGIN_SRC emacs-lisp
