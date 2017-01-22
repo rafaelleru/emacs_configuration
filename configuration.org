@@ -23,6 +23,16 @@ Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emac
    #+RESULTS:
    : pallet
 
+** Use package 
+   #+BEGIN_SRC emacs-lisp
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+   #+END_SRC
+
+   #+RESULTS:
+   | [cl-struct-package-desc diminish (20151215 915) Diminished modes are minor modes with no modeline display nil single melpa nil ((:url . https://github.com/myrjola/diminish.el) (:keywords extensions diminish minor codeprose)) nil] | [cl-struct-package-desc bind-key (20161218 1520) A simple way to manage personal keybindings nil single melpa nil ((:url . https://github.com/jwiegley/use-package) (:keywords keys keybinding config dotemacs)) nil] | [cl-struct-package-desc use-package (20170116 1309) A use-package declaration for simplifying your .emacs ((bind-key (1 0)) (diminish (0 44))) single melpa nil ((:url . https://github.com/jwiegley/use-package) (:keywords dotemacs startup speed config package)) nil] |
+
 * Ajustes de la interfaz
 ** Ocultar botones que no uso y la barra de scroll.
 #+BEGIN_SRC emacs-lisp
@@ -60,17 +70,6 @@ Buscar mejor solarized dark
    #+RESULTS:
    : load-my-white-theme
 
-   #+BEGIN_SRC 
-     ;(require 'color-theme)
-     ;(require 'color-theme-solarized-dark)
-     (require 'color-theme)
-     (require  'color-theme-solarized)
-     (defun my/setup-color-theme ()
-       (interactive)
-       ;(color-theme-solarized-dark))
-       (load-theme 'solarized-dark t))
-     ;(eval-after-load 'color-theme (my/setup-color-theme))
-   #+END_SRC
 ** Fuente Inconsoladata
    Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
 #+BEGIN_SRC emacs-lisp
@@ -122,17 +121,17 @@ Buscar mejor solarized dark
 : hrs/decrease-font-size
 
 ** Resaltar linea de edicion
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'after-init-hook 'global-hl-line-mode)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'after-init-hook 'global-hl-line-mode)
+   #+END_SRC
 ** Ver coincidencia de parentesis
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
-#+END_SRC
+   #+END_SRC
 ** Tamaño al abrir una nueva ventana de emacs
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (when window-system (set-frame-size (selected-frame) 100 60))
-#+END_SRC
+   #+END_SRC
 ** No mover el cursor al hacer scroll con el raton
 #+BEGIN_SRC emacs-lisp
   (defun scroll-down-keep-cursor ()
@@ -149,21 +148,33 @@ Buscar mejor solarized dark
 ** Winner mode
    - Permite almacenar el estado anterior de las ventanas y volver con =C-c flecha=
    #+BEGIN_SRC emacs-lisp
-     (winner-mode t)
+     (use-package winner
+       :ensure t
+       :init
+       (winner-mode t))
    #+END_SRC
+
+   #+RESULTS:
 
 ** Ace window
    Visto en https://www.youtube.com/watch?v=D6OUMVbPKSA&index=5&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg
    parece muy util.
 
    #+BEGIN_SRC emacs-lisp
-     (ace-window t)
-     (global-set-key [remap other-window] 'ace-window)
-     ;(setq aw-scope 'frame)
-     (custom-set-faces
-     '(aw-leading-char-face
-     ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+     (use-package ace-window
+       :ensure t
+       :init
+       (global-set-key [remap other-window] 'ace-window)
+   					  ;(setq aw-scope 'frame)
+       :config 
+       (custom-set-faces
+   	    '(aw-leading-char-face
+   	      ((t (:inherit ace-jump-face-foreground :height 3.0))))))
    #+END_SRC
+
+   #+RESULTS:
+   : t
+
 ** Auto revert mode
    #+BEGIN_SRC emacs-lisp
      (global-auto-revert-mode 1)
@@ -175,7 +186,7 @@ Buscar mejor solarized dark
    #+END_SRC
 ** Desactivar la pantalla de bienvenida
    #+BEGIN_SRC emacs-lisp
-     (setq inibit-startup-message t)
+     (setq inhibit-startup-message t)
    #+END_SRC
 
    #+RESULTS:
@@ -185,9 +196,15 @@ Buscar mejor solarized dark
 ** seleccionar con =C-==
    como en https://www.youtube.com/watch?v=vKIFi1h0I5Y&index=17&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg&spfreload=5
    #+BEGIN_SRC emacs-lisp
-     (require 'expand-region)
-     (global-set-key (kbd "C-=") 'er/expand-region)
+     (use-package expand-region
+       :ensure t
+       :config
+       (global-set-key (kbd "C-=") 'er/expand-region))
    #+END_SRC
+
+   #+RESULTS:
+   : t
+
 ** suena interesante (historial de portapapeles con ivy y counsel)
    https://www.youtube.com/watch?v=LReZI7VAy8w&index=20&list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg
 ** atajo para ir directamente a una linea =goto-line= 
@@ -214,66 +231,92 @@ Buscar mejor solarized dark
    #+END_SRC
 ** Helm (hay que revisar)
    #+BEGIN_SRC emacs-lisp
-     (require 'helm)
-     (require 'helm-config)
-     (helm-autoresize-mode t)
-     (helm-mode t)
-     (global-set-key (kbd "C-x C-f") 'helm-find-files); <del> borre hasta /
-     (global-set-key (kbd "C-x b") 'helm-mini)
-     (global-set-key (kbd "M-x") 'helm-M-x)
-     (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+     (use-package helm
+       :ensure t
+       :config
+       (helm-autoresize-mode t)
+       (helm-mode t)
+       (global-set-key (kbd "C-x C-f") 'helm-find-files); <del> borre hasta /
+       (global-set-key (kbd "C-x b") 'helm-mini)
+       (global-set-key (kbd "M-x") 'helm-M-x)
+       (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+       (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
    #+END_SRC
 
    #+RESULTS:
-   : helm-execute-persistent-action
+   : t
 ** neotree
    #+BEGIN_SRC emacs-lisp
-     (setq neo-theme (if (display-graphic-p) 'ascii 'arrow))
-     (global-set-key (kbd "C-x n t") 'neotree-toggle)
+     (use-package neotree
+       :ensure t
+       :config
+       (setq neo-theme (if (display-graphic-p) 'ascii 'arrow))
+       (global-set-key (kbd "C-x n t") 'neotree-toggle))
    #+END_SRC
 
    #+RESULTS:
-   : neotree-toggle
+   : t
+** smartparents
+   #+BEGIN_SRC emacs-lisp
+     (use-package smartparens
+          :ensure smartparens
+          :init
+          (smartparens-global-mode t))
+   #+END_SRC
+
+   #+RESULTS:
 
 * Ajustes para lenguajes de programacion
 ** Autocomplete mode.
    #+BEGIN_SRC emacs-lisp
-     (ac-config-default)
-     (global-auto-complete-mode t)
+     (use-package auto-complete
+       :ensure t
+       :config
+       (ac-config-default)
+       (global-auto-complete-mode t))
      ;(global-set-key (kbd "C--") auto-complete-
    #+END_SRC
+
+   #+RESULTS:
+   : t
+
 ** Yasnippet.
    #+BEGIN_SRC emacs-lisp
-     (require 'yasnippet)
-     (yas-global-mode 1)
+     (use-package yasnippet
+       :ensure t
+       :init
+       (yas-global-mode 1))
    #+END_SRC
 
-   No se como pero se pude hacer que los snippets aparezcan en el
-   autocompletado. tambien es verdad que el autocomplete no me
-   funciona bien.
+   #+RESULTS:
 ** Activar company mode de modo global y flycheck para colorear la sintaxis
-#+BEGIN_SRC emacs-lisp
-  ;  (add-hook 'after-init-hook 'global-company-mode)
-  ;  (add-hook 'after-init-hook #'global-flycheck-mode)
-  (require 'flycheck)
-  (global-flycheck-mode t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     ;  (add-hook 'after-init-hook 'global-company-mode)
+     ;  (add-hook 'after-init-hook #'global-flycheck-mode)
+
+     (use-package flycheck
+       :ensure t
+       :init
+       (global-flycheck-mode t))
+   #+END_SRC
+
+#+RESULTS:
+
 ** Activamos =global-hl-line-mode= para ver los todos en el codigo
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'after-init-hook #'global-hl-todo-mode)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'after-init-hook #'global-hl-todo-mode)
+   #+END_SRC
 ** Multiples cursores, muy practico para editar html.
 ** Python
 *** autocomplete con company Jedi
 **** TODO Instalar el servidor
-#+BEGIN_SRC emacs-lisp
-  (defun my/python-mode-hook ()
-    (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook 'my/python-mode-hook)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp :tangle no
+     (defun my/python-mode-hook ()
+       (add-to-list 'company-backends 'company-jedi))
+     (add-hook 'python-mode-hook 'my/python-mode-hook)
+   #+END_SRC
 ** C ++
-   #+BEGIN_SRC 
+   #+BEGIN_SRC emacs-lisp
 
   (defun my-irony-mode-hook ()
     (define-key irony-mode-map [remap completion-at-point]
@@ -288,6 +331,10 @@ Buscar mejor solarized dark
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
    #+END_SRC
+
+   #+RESULTS:
+   | company-irony-setup-begin-commands | irony-cdb-autosetup-compile-options | my-irony-mode-hook |
+
    #+BEGIN_SRC emacs-lisp
      (add-hook 'c++-mode-hook 'irony-mode)
      (add-hook 'c-mode-hook 'irony-mode)
@@ -308,44 +355,53 @@ Buscar mejor solarized dark
    | company-irony-setup-begin-commands | irony-cdb-autosetup-compile-options | my-irony-mode-hook |
 
 ** javascript
-** html
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'html-mode-hook
-            (lambda () 
-              (rainbow-mode t)))
-#+END_SRC
-** css
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'css-mode-hook
-            (lambda ()
-              (rainbow-mode t)))
-#+END_SRC
+** html && css
+   #+BEGIN_SRC emacs-lisp
+        (use-package rainbow-mode
+          :ensure t 
+          :config
+          (add-hook 'html-mode-hook
+   		 (lambda () 
+      		(rainbow-mode t)))
+          (add-hook 'css-mode-hook
+               (lambda ()
+                 (rainbow-mode t))))
+   #+END_SRC
+
+   #+RESULTS:
+   : t
 ** Latex
-No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene (como html xD)
+   No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene (como html xD)
 *** autoparsear el buffer al cargarlo
-#+BEGIN_SRC emacs-lisp
-  (setq TeX-parse-self t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq TeX-parse-self t)
+   #+END_SRC
 *** Compilar siempre con pdflatex
-#+BEGIN_SRC emacs-lisp
-  (setq TeX-PDF-mode t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq TeX-PDF-mode t)
+   #+END_SRC
 
 *** Minor mode para matematicas, añade ademas ciertos atajos de teclado
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (LaTeX-math-mode)
-              (setq TeX-master t)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'LaTeX-mode-hook
+               (lambda ()
+                 (LaTeX-math-mode)
+                 (setq TeX-master t)))
+   #+END_SRC
 
 ** R
 ** Java
 *** JDEE
     #+BEGIN_SRC emacs-lisp
-      (require 'jdee)
-      (setq jdee-server-dir "~/.jars")
+      (use-package jdee
+        :ensure t
+        :config
+        (add-hook 'java-mode-hook (setq jdee-server-dir "~/.jars")))
     #+END_SRC
+
+    #+RESULTS:
+    : t
+
 * Magit
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "M-g") 'magit-status)
@@ -353,9 +409,14 @@ No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene 
 * Orgmode
 ** Autocompletado para org
    #+BEGIN_SRC emacs-lisp
-     (require 'org-ac)
-     (org-ac/config-default)
+     (use-package org-ac
+       :ensure t
+       :init
+       (org-ac/config-default))
    #+END_SRC
+
+   #+RESULTS:
+
 ** Autorevertmode en buffers de rogmode
    #+BEGIN_SRC emacs-lisp
      (add-hook 'org-mode-hook 'auto-revert-mode 1)
@@ -365,24 +426,31 @@ No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene 
    | (lambda nil (org-bullets-mode t)) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-ac/setup-current-buffer | auto-revert-mode |
 
 ** Activar puntos en vez de asteriscos, que mola mas.
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook
-            (lambda ()
-              (org-bullets-mode t)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook
+                 (lambda ()
+   		(org-bullets-mode t))))
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
 ** En vez de puntos suspensivos mostrar flecha '⤵'
    #+BEGIN_SRC emacs-lisp
      (setq org-ellipsis "⤵")
    #+END_SRC
 ** Bloques de codigo en archivos orgmode
 *** Activar el coloreado de sintaxis en bloques de código de orgmode
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-fontify-natively t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-fontify-natively t)
+   #+END_SRC
 *** Hacer que las tabulaciones actuen como si estuvieramos en un bugger del lenguaje indicadoBEGIN_SRC emacs-lisp
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-tab-acts-natively t)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-tab-acts-natively t)
+   #+END_SRC
 
 *** No cambiar de ventana al editar un snippet de codigo
 #+BEGIN_SRC emacs-lisp
@@ -394,20 +462,20 @@ No es un lenguaje de programcaion pero es donde mas sentido me parece que tiene 
        (setq org-directory "~/org")
      #+END_SRC
 *** Funcion que devuelve el path de un archivo org en "~/org"
-#+BEGIN_SRC emacs-lisp
-  (defun org-file-path (filename)
-    "Return the absolute address of an org file, given its relative name."
-    (concat (file-name-as-directory org-directory) filename))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun org-file-path (filename)
+       "Return the absolute address of an org file, given its relative name."
+       (concat (file-name-as-directory org-directory) filename))
+   #+END_SRC
 *** Localizacion del archivo de todos
-#+BEGIN_SRC emacs-lisp
-  (setq org-index-file (org-file-path "index.org"))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-index-file (org-file-path "index.org"))
+   #+END_SRC
 *** Localizacion del archive.org, ahi se guarda todo lo que hago.
-#+BEGIN_SRC emacs-lisp
-  (setq org-archive-location
-        (concat (org-file-path "archive.org") "::* From %s"))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-archive-location
+   	(concat (org-file-path "archive.org") "::* From %s"))
+   #+END_SRC
 *** La agenda se carga desde el index
    #+BEGIN_SRC emacs-lisp
      (setq org-agenda-files (list org-index-file
@@ -517,15 +585,16 @@ Presionar =C-c i= para abrir *index.org*
           (after delete-capture-frame activate)  
         "Advise capture-finalize to close the frame"  
         (if (equal "capture" (frame-parameter nil 'name))  
-    	(delete-frame)))
+        (delete-frame)))
 
       (defadvice org-capture-destroy 
           (after delete-capture-frame activate)  
         "Advise capture-destroy to close the frame"  
         (if (equal "capture" (frame-parameter nil 'name))  
-    	(delete-frame)))  
+        (delete-frame)))  
 
-      (require 'noflet)
+      (use-package noflet
+        :ensure t)
 
       (defun make-capture-frame ()
         "Create a new frame and run org-capture."
@@ -534,13 +603,19 @@ Presionar =C-c i= para abrir *index.org*
         (select-frame-by-name "capture")
         (delete-other-windows)
         (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
-    	    (org-capture)))
+        (org-capture)))
     #+END_SRC
+
+    #+RESULTS:
+    : make-capture-frame
+
 **** TODO No funciona si no hay una ventana abierta con =emacsclient -e "(make-capture-frame)"=
 *** gcal-org
     #+BEGIN_SRC emacs-lisp
-      (require 'org-gcal)
-      (load-file "~/.emacs.d/hidden.el")
+      (use-package org-gcal
+        :ensure t
+        :config
+        (load-file "~/.emacs.d/hidden.el"))
     #+END_SRC
 
     #+RESULTS:
@@ -558,67 +633,121 @@ Presionar =C-c i= para abrir *index.org*
 
 ** Exportando desde orgmode
 *** Exportar a markdown y beamer directamente
-#+BEGIN_SRC emacs-lisp
-  (require 'ox-md)
-  (require 'ox-beamer)
-  (require 'ox-reveal)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (require 'ox-md)
+     (require 'ox-beamer)
+     (require 'ox-reveal)
+   #+END_SRC
+
+   #+RESULTS:
+   : ox-reveal
+*** Export to bootstrap
+    #+BEGIN_SRC emacs-lisp
+      (use-package ox-twbs
+        :ensure t)
+    #+END_SRC
+
+    #+RESULTS:
 
 *** Permitir que babel evalue codigo de GNUPLOT, emacs-lisp, ruby, y python.
-#+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (ruby . t)
-     (python . t)
-     (dot . t)
-     (gnuplot . t)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((emacs-lisp . t)
+        (ruby . t)
+        (python . t)
+        (dot . t)
+        (gnuplot . t)))
+   #+END_SRC
 *** Desactivar la confirmacion para evaluar codigo
-#+BEGIN_SRC emacs-lisp
-  (setq org-confirm-babel-evaluate nil)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-confirm-babel-evaluate nil)
+   #+END_SRC
 *** Exportar a PDF
 Activar el coloreado de codigo con pylint
-#+BEGIN_SRC emacs-lisp
-  (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq org-latex-pdf-process
+   	'("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+   #+END_SRC
 
 Ademas incluimos este paquete en todos los documetos de latex que exportemos
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (setq org-latex-listings 'minted)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'org-latex-packages-alist '("" "minted"))
+     (setq org-latex-listings 'minted)
+   #+END_SRC
 ** Org-sync para gestionar los issues de github en orgmode
    #+BEGIN_SRC emacs-lisp
-     (require 'org-sync)
-     (require 'org-sync-github) ;backend para github si queremos mas solo añadir
+      (use-package org-sync
+        :ensure t
+        :config
+        ;backend para github si queremos mas solo añadir
+        (require 'org-sync-github))
    #+END_SRC
+
+   #+RESULTS:
+   : t
 
 *** funcion que detecta si hay un repositorio de git en el directorio actual y carga automaticamente los issues en <nombre_repo>.org
 **** TODO la funcion y aprender lisp xD
+** funcion para actualizar el indice de cosas que leer en el navegador
+   #+BEGIN_SRC emacs-lisp :tangle no
+     ;; Auto-export org files to html when saved 
+     (defun org-mode-export-hook()
+       "Auto export html"
+       (when (eq major-mode 'org-mode)
+         (when (eq buffer-file-name "/home/rafa/org/to-read.org"))
+          (org-twbs-export-to-html t)))
+
+     (add-hook 'after-save-hook 'org-mode-export-hook)
+   #+END_SRC
+
+   #+RESULTS:
+   | org-mode-export-hook |
+
 * small-shell from [[https://github.com/vterron/dot-emacs][@pyctor]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun small-shell ()
     (interactive)
     (split-window-vertically)
     (other-window 1)
     (shrink-window (- (window-height) 12))
-    (eshell "/bin/zsh"))
+    (eshell "/bin/zsh")) ;Me gusta mas eshell que ansi-term que usaba el original
 #+END_SRC
 
 #+RESULTS:
 : small-shell
+** salir de small-shell y matar el buffer
+   como solo la uso para cosas brebes no me interesa tener abiertas 2000000 instancias de small-shells
+   #+BEGIN_SRC emacs-lisp :tangle no
+     (add-hook 'eshell-hook (lambda ()
+            		  (local-set-key (kbd "C-x C-k p")
+         				 (delete-window)
+            				 )))
+   #+END_SRC
 
-** TODO no se por que pero =zsh= da problemas
+* pop-shell
+  #+BEGIN_SRC emacs-lisp 
+    (use-package shell-pop
+      :ensure t
+      :init
+      (setq shell-pop-shell-type "eshell")
+      (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
+  #+END_SRC
+
+  #+RESULTS:
+
 * Undo Tree 
   #+BEGIN_SRC emacs-lisp
-    (require 'undo-tree)
-    (global-undo-tree-mode 1)
+    (use-package undo-tree
+      :ensure t
+      :init
+      (global-undo-tree-mode 1))
   #+END_SRC
+
+  #+RESULTS:
+
   Activar las flechas para navegar por undo Tree mode (parece que no me hace falta hacer esto)
   #+BEGIN_SRC emacs-lisp
     ;(add-hook 'undo-tree-mode-hook
@@ -647,11 +776,18 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
     ;(disable-arrow-keys) He conseguido no usar las flechas al fin.
   #+END_SRC
 
+  #+RESULTS:
+  : enable-arrow-keys
+
   #+BEGIN_SRC emacs-lisp
     (add-hook 'term-mode-hook
   	    (lambda ()
   	      (local-set-key (kbd "C-c C-k") 'kill-buffer-this-buffer)))
   #+END_SRC
+
+  #+RESULTS:
+  | lambda | nil | (local-set-key (kbd C-c C-k) (quote kill-buffer-this-buffer)) |
+
 * Abrir cheatseet de emacs.
   #+BEGIN_SRC emacs-lisp
     (defun open-cheat-sheet ()
@@ -683,4 +819,4 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
    #+END_SRC
 
    #+RESULTS:
-   | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | (lambda (frame) (select-frame frame) (load-my-theme)) | x-dnd-init-frame 
+   | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | x-dnd-init-frame |
