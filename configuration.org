@@ -697,8 +697,8 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
      (defun org-mode-export-hook()
        "Auto export html"
        (when (eq major-mode 'org-mode)
-         (when (eq buffer-file-name "/home/rafa/org/to-read.org"))
-          (org-twbs-export-to-html t)))
+         (when (equal buffer-file-name "/home/rafa/org/to-read.org")
+          (org-twbs-export-to-html t))))
 
      (add-hook 'after-save-hook 'org-mode-export-hook)
    #+END_SRC
@@ -820,3 +820,16 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
 
    #+RESULTS:
    | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | x-dnd-init-frame |
+* al abrir la lista de buffer cambiar directamente a esa ventana
+  Cuando ejecuto =C-x C-b= normalmente quiero hacer algo como eliminar varios buffers a la vez, por lo que cada vez que abra la lista de buffers quiero saltar a ella.
+  #+BEGIN_SRC emacs-lisp
+    (defun open-buffer-list ()
+      (interactive)
+      "Abre la lista de buffers y salta a la nueva ventana automaticamente"
+      (view-buffer-other-window "*Buffer List*"))
+
+    (global-set-key (kbd "C-x C-b") 'open-buffer-list)
+  #+END_SRC
+
+  #+RESULTS:
+  : open-buffer-list
