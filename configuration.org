@@ -316,6 +316,14 @@ Buscar mejor solarized dark
      (add-hook 'python-mode-hook 'my/python-mode-hook)
    #+END_SRC
 ** C ++
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company-irony
+       :ensure t)
+   #+END_SRC
+
+   #+RESULTS:
+
    #+BEGIN_SRC emacs-lisp
 
   (defun my-irony-mode-hook ()
@@ -336,19 +344,19 @@ Buscar mejor solarized dark
    | company-irony-setup-begin-commands | irony-cdb-autosetup-compile-options | my-irony-mode-hook |
 
    #+BEGIN_SRC emacs-lisp
-     (add-hook 'c++-mode-hook 'irony-mode)
-     (add-hook 'c-mode-hook 'irony-mode)
-     (add-hook 'objc-mode-hook 'irony-mode)
+          (add-hook 'c++-mode-hook 'irony-mode)
+          (add-hook 'c-mode-hook 'irony-mode)
+          (add-hook 'objc-mode-hook 'irony-mode)
 
-     ;; replace the `completion-at-point' and `complete-symbol' bindings in
-     ;; irony-mode's buffers by irony-mode's function
-     (defun my-irony-mode-hook ()
-       (define-key irony-mode-map [remap completion-at-point]
-         'irony-completion-at-point-async)
-       (define-key irony-mode-map [remap complete-symbol]
-         'irony-completion-at-point-async))
-     (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+          ;; replace the `completion-at-point' and `complete-symbol' bindings in
+          ;; irony-mode's buffers by irony-mode's function
+          (defun my-irony-mode-hook ()
+   	 (define-key irony-mode-map [remap completion-at-point]
+              'irony-completion-at-point-async)
+   	 (define-key irony-mode-map [remap complete-symbol]
+              'irony-completion-at-point-async))
+          (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+          (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
    #+END_SRC
 
    #+RESULTS:
@@ -820,7 +828,8 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
 
    #+RESULTS:
    | (lambda (frame) (select-frame frame) (load-my-theme) (set-font)) | x-dnd-init-frame |
-* al abrir la lista de buffer cambiar directamente a esa ventana
+* Atajos personalizados
+** al abrir la lista de buffer cambiar directamente a esa ventana
   Cuando ejecuto =C-x C-b= normalmente quiero hacer algo como eliminar varios buffers a la vez, por lo que cada vez que abra la lista de buffers quiero saltar a ella.
   #+BEGIN_SRC emacs-lisp
     (defun open-buffer-list ()
@@ -833,3 +842,11 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
 
   #+RESULTS:
   : open-buffer-list
+** kill-this-buffer con =C-x k= 
+   Normalmente cuando ejecuto =C-x k= es para eliminar el buffer en el que estoy actualmente.
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x k") 'kill-this-buffer)
+   #+END_SRC
+
+   #+RESULTS:
+   : kill-this-buffer
