@@ -704,6 +704,8 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
     (shrink-window (- (window-height) 12))
     (eshell "/bin/zsh")) ;Me gusta mas eshell que ansi-term que usaba el original
 
+  (global-set-key (kbd "C-ñ") 'small-shell)
+
   (add-hook 'eshell-exit-hook 'delete-window)
 #+END_SRC
 
