@@ -343,7 +343,6 @@ Buscar mejor solarized dark
 
    #+RESULTS:
    | company-irony-setup-begin-commands | irony-cdb-autosetup-compile-options | my-irony-mode-hook |
-
 ** javascript
 ** html && css
    #+BEGIN_SRC emacs-lisp
@@ -558,7 +557,17 @@ Presionar =C-c i= para abrir *index.org*
 
   (global-set-key (kbd "C-c i") 'open-index-file)
 #+END_SRC
+***** abrir la lista de enlaces para leer =C-c r=
+   #+BEGIN_SRC emacs-lisp
+     (defun find-to-read-file ()
+       (interactive)
+       (find-file "~/org/to-read.org"))
 
+     (global-set-key (kbd "C-c r") 'find-to-read-file)
+   #+END_SRC
+
+   #+RESULTS:
+   : find-to-read-file
 **** Hit =M-n= to quickly open up a capture template for a new todo.
 #+BEGIN_SRC emacs-lisp
   (defun org-capture-todo ()
@@ -830,3 +839,4 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
 
    #+RESULTS:
    : kill-this-buffer
+
