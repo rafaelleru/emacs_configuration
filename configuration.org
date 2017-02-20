@@ -130,8 +130,11 @@ Buscar mejor solarized dark
    #+END_SRC
 ** Tamaño al abrir una nueva ventana de emacs
    #+BEGIN_SRC emacs-lisp
-  (when window-system (set-frame-size (selected-frame) 100 60))
+  (when window-system (set-frame-size (selected-frame) 130 45))
    #+END_SRC
+
+   #+RESULTS:
+
 ** No mover el cursor al hacer scroll con el raton
 #+BEGIN_SRC emacs-lisp
   (defun scroll-down-keep-cursor ()
@@ -267,6 +270,16 @@ Buscar mejor solarized dark
    #+RESULTS:
 
 * Ajustes para lenguajes de programacion
+** projectile mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :ensure t
+       :init
+       (projectile-mode t))
+   #+END_SRC
+
+   #+RESULTS:
+
 ** Autocomplete mode.
    #+BEGIN_SRC emacs-lisp
      (use-package auto-complete
@@ -714,12 +727,20 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
     (eshell "/bin/zsh")) ;Me gusta mas eshell que ansi-term que usaba el original
 
   (global-set-key (kbd "C-ñ") 'small-shell)
+  (defun delete-shell-window ()
+    (interactive)
+    (when (eq major-mode 'eshell)
+      (when (eq window-height 12)
+	(delete-window t))))
 
-  (add-hook 'eshell-exit-hook 'delete-window)
+  ;; (add-hook 'eshell-exit-hook 
+  ;; 	  (lambda ()
+  ;; 	    ((if (eq window-height 12)
+  ;; 		))))
 #+END_SRC
 
 #+RESULTS:
-| delete-window |
+: delete-shell-window
 ** salir de small-shell y matar el buffer
    como solo la uso para cosas brebes no me interesa tener abiertas 2000000 instancias de small-shells
    #+BEGIN_SRC emacs-lisp :tangle no
