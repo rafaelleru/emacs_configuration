@@ -47,6 +47,13 @@ Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emac
 ** tema personalizado
 Buscar mejor solarized dark
    #+BEGIN_SRC emacs-lisp
+
+     (use-package gotham-theme
+       :ensure t)
+
+     (use-package solarized
+       :ensure t)
+
      (defun load-my-theme ()
          ;;;"""Carga mi tema solarized"""
          (interactive)
@@ -56,7 +63,9 @@ Buscar mejor solarized dark
          (setq solarized-height-plus-3 1.0)
          (setq solarized-height-plus-4 1.0)
          (setq solarized-high-contrast-mode-line t)
-         (load-theme 'solarized-dark t)
+         ;(load-theme 'solarized-dark t)
+
+         (load-theme 'gotham t)
      )
      (add-hook 'after-init-hook 'load-my-theme)
      (when window-system
@@ -355,7 +364,6 @@ Buscar mejor solarized dark
 ** Multiples cursores, muy practico para editar html.
 ** Python
 *** autocomplete con company Jedi
-**** TODO Instalar el servidor
    #+BEGIN_SRC emacs-lisp :tangle no
      (defun my/python-mode-hook ()
        (add-to-list 'company-backends 'company-jedi))
