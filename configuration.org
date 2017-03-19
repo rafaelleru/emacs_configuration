@@ -233,7 +233,7 @@ Buscar mejor solarized dark
      (setq ivy-display-style 'fancy)
      (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
    #+END_SRC
-** Helm (hay que revisar)
+** Helm
    #+BEGIN_SRC emacs-lisp
      (use-package helm
        :ensure t
@@ -249,6 +249,16 @@ Buscar mejor solarized dark
 
    #+RESULTS:
    : t
+
+*** helm-google 
+    ¿Por qué no?
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-google
+        :ensure t)
+    #+END_SRC
+
+    #+RESULTS:
+
 ** neotree
    #+BEGIN_SRC emacs-lisp
      (use-package neotree
@@ -905,4 +915,3 @@ Ademas incluimos este paquete en todos los documetos de latex que exportemos
 
    #+RESULTS:
    : kill-this-buffer
-
