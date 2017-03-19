@@ -300,6 +300,27 @@ Buscar mejor solarized dark
 
    #+RESULTS:
 
+** engine-mode
+   seleccionar y buscar desde emacs
+   #+BEGIN_SRC emacs-lisp
+     (use-package engine-mode
+       :ensure t
+       :init
+       (engine-mode t)
+       :config
+       (defengine duckduckgo
+         "https://duckduckgo.com/?q=%s"
+         :keybinding "d")
+
+       (defengine google
+         "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+         :keybinding "g")
+       ) 
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
 * elfeed
   #+BEGIN_SRC emacs-lisp
     (use-package elfeed
@@ -521,6 +542,10 @@ Buscar mejor solarized dark
 #+BEGIN_SRC emacs-lisp
   (setq org-src-window-setup 'current-window)
 #+END_SRC
+
+#+RESULTS:
+: current-window
+
 ** GTD y ideas en org-mode
 *** Todos los archivos org los guardo en '~/org/'
      #+BEGIN_SRC emacs-lisp
