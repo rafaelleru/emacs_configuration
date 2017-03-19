@@ -14,6 +14,7 @@ Credits to Harry R. Schwartz, [[https://github.com/hrs/dotfiles/blob/master/emac
 : Madrid, ES
 
 * Gestion de paquetes =melpa y cask=
+
    #+BEGIN_SRC emacs-lisp
      (require 'cask "~/.cask/cask.el")
      (cask-initialize)
@@ -268,6 +269,28 @@ Buscar mejor solarized dark
    #+END_SRC
 
    #+RESULTS:
+** which-key
+   En ocasiones no recuerdas que combinacion realiza una accion en
+   concreto, ahi es cuando which-key entra en accion.
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :ensure t
+       :init
+       (which-key-mode 1))
+   #+END_SRC
+
+   #+RESULTS:
+
+* elfeed
+  #+BEGIN_SRC emacs-lisp
+    (use-package elfeed
+      :ensure t
+      :config
+      :init)
+  #+END_SRC
+
+  #+RESULTS:
+  : t
 
 * Ajustes para lenguajes de programacion
 ** projectile mode
@@ -328,6 +351,19 @@ Buscar mejor solarized dark
        (add-to-list 'company-backends 'company-jedi))
      (add-hook 'python-mode-hook 'my/python-mode-hook)
    #+END_SRC
+*** elpy
+    utilidades de IDE python en emacs
+    #+BEGIN_SRC emacs-lisp
+      (use-package elpy
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook 'elpy-mode)
+        )
+    #+END_SRC
+
+    #+RESULTS:
+    : t
+
 ** C ++
    #+BEGIN_SRC emacs-lisp
       (add-hook 'c++-mode-hook 'irony-mode)
@@ -359,15 +395,19 @@ Buscar mejor solarized dark
 ** javascript
 ** html && css
    #+BEGIN_SRC emacs-lisp
-        (use-package rainbow-mode
-          :ensure t 
-          :config
-          (add-hook 'html-mode-hook
-   		 (lambda () 
-      		(rainbow-mode t)))
-          (add-hook 'css-mode-hook
-               (lambda ()
-                 (rainbow-mode t))))
+     (use-package rainbow-mode
+       :ensure t 
+       :config
+       (add-hook 'html-mode-hook
+        (lambda () 
+                  (rainbow-mode t)))
+       (add-hook 'css-mode-hook
+   	      (lambda ()
+   		(rainbow-mode t)))
+       (add-hook 'web-mode
+   	      (lambda ()
+   		rainbow-mode t)))
+
    #+END_SRC
 
    #+RESULTS:
@@ -403,6 +443,11 @@ Buscar mejor solarized dark
 
     #+RESULTS:
     : t
+
+** eclipse-ecl
+   #+BEGIN_SRC emacs-lisp
+     (require 'ecl-mode "~/.emacs.d/ecl-mode.el/ecl-mode.el")
+   #+END_SRC
 
 * Magit
    #+BEGIN_SRC emacs-lisp

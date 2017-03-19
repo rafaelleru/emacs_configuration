@@ -49,7 +49,7 @@
 ** =q= vuelve al nodo de edicion seleccionado
 ** =d= muestra un diff del estado actual del archivo y el nodo seleccionado
 
-* neotree
+* neotree =C-x n t=
 ** =SPC= =RET= =TAB= expandir nivel
 ** =g= refresh
 ** =A= maximizar o minimizar
