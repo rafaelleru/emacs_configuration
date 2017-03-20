@@ -51,8 +51,8 @@ Buscar mejor solarized dark
      (use-package gotham-theme
        :ensure t)
 
-     (use-package solarized
-       :ensure t)
+     ;; (use-package solarized
+     ;;   :ensure t)
 
      (defun load-my-theme ()
          ;;;"""Carga mi tema solarized"""
@@ -305,9 +305,8 @@ Buscar mejor solarized dark
    #+BEGIN_SRC emacs-lisp
      (use-package engine-mode
        :ensure t
-       :init
-       (engine-mode t)
        :config
+       (engine-mode t)
        (defengine duckduckgo
          "https://duckduckgo.com/?q=%s"
          :keybinding "d")
@@ -547,6 +546,14 @@ Buscar mejor solarized dark
 : current-window
 
 ** GTD y ideas en org-mode
+*** Keywords TODO
+    #+BEGIN_SRC emacs-lisp
+      (setq org-todo-keywords '((sequence "TODO" "DOING" "WAITING" "|" "DONE")))
+    #+END_SRC
+
+    #+RESULTS:
+    | sequence | TODO | DOING | WAITING |   |   | DONE |
+
 *** Todos los archivos org los guardo en '~/org/'
      #+BEGIN_SRC emacs-lisp
        (setq org-directory "~/org")
