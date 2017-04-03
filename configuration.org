@@ -80,16 +80,17 @@ Buscar mejor solarized dark
    #+RESULTS:
    : load-my-white-theme
 
-** Fuente Inconsoladata
+** Fuente Iosevka
+*** TODO hacer las mismas funciones para Inconsolata-ttf
    Permite ademas cambiar el tamaño de la ventana y la fuente para presentaciones por ejemplo.
 #+BEGIN_SRC emacs-lisp
-    (setq hrs/default-font "Inconsolata")
-    (setq hrs/default-font-size 15)
-    (setq hrs/current-font-size hrs/default-font-size)
+  (setq hrs/default-font "Iosevka")
+  (setq hrs/default-font-size 15)
+  (setq hrs/current-font-size hrs/default-font-size)
 
   (defun set-font () 
     (interactive)
-    (setq hrs/default-font "Inconsolata")
+    (setq hrs/default-font "Iosevka")
     (setq hrs/default-font-size 15)
     (setq hrs/current-font-size hrs/default-font-size))
 
@@ -110,14 +111,14 @@ Buscar mejor solarized dark
     "Increase current font size by a factor of `hrs/font-change-increment'."
     (interactive)
     (setq hrs/current-font-size
-          (ceiling (* hrs/current-font-size hrs/font-change-increment)))
+	  (ceiling (* hrs/current-font-size hrs/font-change-increment)))
     (hrs/set-font-size))
 
   (defun hrs/decrease-font-size ()
     "Decrease current font size by a factor of `hrs/font-change-increment', down to a minimum size of 1."
     (interactive)
     (setq hrs/current-font-size
-          (max 1
+	  (max 1
 	       (floor (/ hrs/current-font-size hrs/font-change-increment))))
     (hrs/set-font-size))
 
@@ -125,6 +126,7 @@ Buscar mejor solarized dark
   (define-key global-map (kbd "C-+") 'hrs/increase-font-size)
   (define-key global-map (kbd "C-_") 'hrs/decrease-font-size)
   (define-key global-map (kbd "C--") 'hrs/decrease-font-size)
+  (hrs/set-font-size)
 #+END_SRC
 
 #+RESULTS:
@@ -212,7 +214,8 @@ Buscar mejor solarized dark
      (use-package expand-region
        :ensure t
        :config
-       (global-set-key (kbd "C-=") 'er/expand-region))
+       (global-set-key (kbd "C-=") 'er/expand-region)
+       (global-set-key (kbd "C-¿") 'er/contract-region))
    #+END_SRC
 
    #+RESULTS:
@@ -324,12 +327,36 @@ Buscar mejor solarized dark
   #+BEGIN_SRC emacs-lisp
     (use-package elfeed
       :ensure t
+      :init
       :config
-      :init)
+    )
+    (setq elfeed-db-directory "~/.emacs.d/elfeeddb")
   #+END_SRC
 
   #+RESULTS:
-  : t
+  : ~/.emacs.d/elfeeddb
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package elfeed-goodies
+    :ensure t
+    :config 
+    )
+    (elfeed-goodies/setup)
+  #+END_SRC
+
+  #+RESULTS:
+  : elfeed-goodies/split-show-prev
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package elfeed-org
+      :ensure t
+      )
+    (elfeed-org)
+    (setq rmh-elfeed-org-files (list "/data/Nextcloud/org/rss.org"))
+  #+END_SRC
+
+  #+RESULTS:
+  | /data/Nextcloud/org/read.org |
 
 * Ajustes para lenguajes de programacion
 ** projectile mode
